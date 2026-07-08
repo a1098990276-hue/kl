@@ -1,0 +1,22 @@
+{
+  "name": "khaled-erp",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.khaled.erp",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}

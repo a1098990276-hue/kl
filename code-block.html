@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>الصقر ERP - نظام إدارة الموارد المؤسسية</title>
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background: #f0f2f5;
+            color: #1f2937;
+        }
+        
+        /* ==================== LOGIN PAGE ==================== */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            width: 450px;
+            max-width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #1a237e, #3949ab, #1a237e);
+        }
+        
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            border-radius: 24px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(26,35,126,0.3);
+        }
+        
+        .login-logo span {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .login-title {
+            color: #1a237e;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-error {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 12px;
+            background: #ffebee;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .form-group input:focus {
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+            background: white;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(26,35,126,0.3);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26,35,126,0.4);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-info {
+            margin-top: 25px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .login-info strong {
+            color: #1a237e;
+        }
+        
+        /* ==================== APP LAYOUT ==================== */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #111827;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sidebar-logo {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .sidebar-subtitle {
+            margin: 4px 0 0;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+        
+        .sidebar-user {
+            padding: 12px 20px;
+            border-bottom: 1px solid #1f2937;
+            font-size: 12px;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar-user-role {
+            padding: 2px 8px;
+            background: #374151;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 2px;
+            font-size: 13px;
+            background: transparent;
+            color: #d1d5db;
+            text-align: right;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-nav button:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        
+        .sidebar-nav button.active {
+            background: rgba(59,130,246,0.15);
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        
+        .sidebar-nav button .icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid #1f2937;
+        }
+        
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-right: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 16px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .top-header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .top-header .date {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .page-content {
+            flex: 1;
+            padding: 30px;
+            overflow: auto;
+        }
+        
+        /* ==================== DASHBOARD ==================== */
+        .page-title {
+            margin-bottom: 25px;
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #f0f0f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .stat-info h3 {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .stat-info .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background: #cce5ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        /* ==================== TABLES ==================== */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            margin-bottom: 16px;
+            color: #1f2937;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table thead th {
+            padding: 12px 10px;
+            text-align: right;
+            font-size: 13px;
+            color: #6b7280;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+        }
+        
+        table tbody td {
+            padding: 12px 10px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        table tbody tr:hover {
+            background: #f9fafb;
+        }
+        
+        /* ==================== FORMS ==================== */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 13px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+            background: #fafafa;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3b82f6;
+            background: white;
+        }
+        
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26,35,126,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #1f2937;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        /* ==================== LOADING ==================== */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+        
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state h3 {
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-right: 200px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-box {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 60px;
+            }
+            
+            .sidebar .sidebar-title,
+            .sidebar .sidebar-subtitle,
+            .sidebar .sidebar-user,
+            .sidebar-nav button span:not(.icon) {
+                display: none;
+            }
+            
+            .sidebar-nav button {
+                justify-content: center;
+                padding: 12px;
+            }
+            
+            .main-content {
+                margin-right: 60px;
+            }
+        }
+        
+        /* ==================== TOAST ==================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+        }
+        
+        .toast {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 280px;
+        }
+        
+        .toast-success { background: #059669; }
+        .toast-error { background: #dc2626; }
+        .toast-warning { background: #d97706; }
+        .toast-info { background: #2563eb; }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-logo">
+                <span>S</span>
+            </div>
+            <h1 class="login-title">الصقر ERP</h1>
+            <p class="login-subtitle">نظام متكامل لإدارة الموارد المؤسسية v4.0</p>
+            
+            <div class="login-error" id="loginError"></div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">اسم المستخدم</label>
+                    <input type="text" id="username" value="admin" placeholder="أدخل اسم المستخدم" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" value="admin123" placeholder="أدخل كلمة المرور" required>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">تسجيل الدخول</button>
+            </form>
+            
+            <div class="login-info">
+                <strong>بيانات الدخول الافتراضية:</strong> admin / admin123
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== MAIN APP ==================== -->
+    <div class="app-container" id="appContainer">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">S</div>
+                <div>
+                    <h2 class="sidebar-title">الصقر ERP</h2>
+                    <p class="sidebar-subtitle">Saqr Enterprise System</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-user" id="sidebarUser">
+                👤 <span id="userName">المستخدم</span>
+                <span class="sidebar-user-role" id="userRole">user</span>
+            </div>
+            
+            <nav class="sidebar-nav" id="sidebarNav">
+                <button class="active" onclick="showPage('dashboard')">
+                    <span class="icon">📊</span>
+                    <span>لوحة التحكم</span>
+                </button>
+                <button onclick="showPage('accounts')">
+                    <span class="icon">📒</span>
+                    <span>شجرة الحسابات</span>
+                </button>
+                <button onclick="showPage('journal')">
+                    <span class="icon">📝</span>
+                    <span>القيود اليومية</span>
+                </button>
+                <button onclick="showPage('customers')">
+                    <span class="icon">👥</span>
+                    <span>العملاء</span>
+                </button>
+                <button onclick="showPage('vendors')">
+                    <span class="icon">🏭</span>
+                    <span>الموردين</span>
+                </button>
+                <button onclick="showPage('products')">
+                    <span class="icon">📦</span>
+                    <span>المنتجات</span>
+                </button>
+                <button onclick="showPage('sales')">
+                    <span class="icon">💰</span>
+                    <span>المبيعات</span>
+                </button>
+                <button onclick="showPage('purchases')">
+                    <span class="icon">📥</span>
+                    <span>المشتريات</span>
+                </button>
+                <button onclick="showPage('inventory')">
+                    <span class="icon">🏪</span>
+                    <span>المخزون</span>
+                </button>
+                <button onclick="showPage('pos')">
+                    <span class="icon">🛒</span>
+                    <span>نقطة البيع</span>
+                </button>
+                <button onclick="showPage('employees')">
+                    <span class="icon">👔</span>
+                    <span>الموظفين</span>
+                </button>
+                <button onclick="showPage('reports')">
+                    <span class="icon">📈</span>
+                    <span>التقارير</span>
+                </button>
+                <button onclick="showPage('settings')">
+                    <span class="icon">⚙️</span>
+                    <span>الإعدادات</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="handleLogout()">🚪 تسجيل الخروج</button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="top-header">
+                <div class="top-header-inner">
+                    <h1 id="pageTitle">لوحة التحكم</h1>
+                    <div class="date" id="currentDate"></div>
+                </div>
+            </header>
+            
+            <div class="page-content" id="pageContent">
+                <!-- Content loaded dynamically -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== CONFIGURATION ====================
+        const API_BASE = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = null;
+        let currentPage = 'dashboard';
+        
+        // ==================== API HELPER ====================
+        async function api(method, url, body = null) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const options = { method, headers };
+            if (body) options.body = JSON.stringify(body);
+            
+            try {
+                const response = await fetch(API_BASE + url, options);
+                const data = await response.json();
+                
+                if (!response.ok && !data.success) {
+                    if (response.status === 401) {
+                        handleLogout();
+                        throw new Error('انتهت الجلسة');
+                    }
+                    throw new Error(data.error || 'حدث خطأ');
+                }
+                
+                return data;
+            } catch (error) {
+                showToast(error.message, 'error');
+                throw error;
+            }
+        }
+        
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            toast.innerHTML = icons[type] + ' ' + message;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // ==================== AUTHENTICATION ====================
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'جاري تسجيل الدخول...';
+            errorDiv.style.display = 'none';
+            
+            try {
+                const data = await api('POST', '/auth/login', { username, password });
+                
+                if (data.success) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('appContainer').style.display = 'flex';
+                    
+                    updateUserInfo();
+                    showPage('dashboard');
+                    showToast('مرحباً بك في نظام الصقر ERP', 'success');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message || 'فشل تسجيل الدخول';
+                errorDiv.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'تسجيل الدخول';
+            }
+        }
+        
+        function handleLogout() {
+            if (token) {
+                api('POST', '/auth/logout').catch(() => {});
+            }
+            token = null;
+            currentUser = null;
+            localStorage.clear();
+            
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('loginError').style.display = 'none';
+            
+            showToast('تم تسجيل الخروج', 'info');
+        }
+        
+        function updateUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.full_name;
+                document.getElementById('userRole').textContent = currentUser.role;
+            }
+        }
+        
+        // ==================== PAGE NAVIGATION ====================
+        function showPage(page) {
+            currentPage = page;
+            
+            // Update active menu
+            document.querySelectorAll('.sidebar-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event?.target?.closest('button')?.classList.add('active');
+            
+            // Update title
+            const titles = {
+                dashboard: '📊 لوحة التحكم',
+                accounts: '📒 شجرة الحسابات',
+                journal: '📝 القيود اليومية',
+                customers: '👥 العملاء',
+                vendors: '🏭 الموردين',
+                products: '📦 المنتجات',
+                sales: '💰 المبيعات',
+                purchases: '📥 المشتريات',
+                inventory: '🏪 المخزون',
+                pos: '🛒 نقطة البيع',
+                employees: '👔 الموظفين',
+                reports: '📈 التقارير',
+                settings: '⚙️ الإعدادات'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'الصقر ERP';
+            
+            // Load page content
+            switch(page) {
+                case 'dashboard': loadDashboard(); break;
+                case 'accounts': loadAccounts(); break;
+                case 'customers': loadCustomers(); break;
+                case 'vendors': loadVendors(); break;
+                case 'products': loadProducts(); break;
+                case 'sales': loadSales(); break;
+                case 'purchases': loadPurchases(); break;
+                case 'settings': loadSettings(); break;
+                default: loadDashboard();
+            }
+        }
+        
+        // ==================== DASHBOARD ====================
+        async function loadDashboard() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل البيانات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/dashboard');
+                const stats = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">📊 لوحة التحكم</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #3b82f620; color: #3b82f6;">💰</div>
+                            <div class="stat-info">
+                                <h3>إجمالي المبيعات</h3>
+                                <div class="value">${(stats.total_sales || 0).toLocaleString()} ريال</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #10b98120; color: #10b981;">📥</div>
+                            <div class="stat-info">
+                                <h3>إجمالي المشتريات</h3>
+                                <div class="value">${(stats.total_purchases || 0).toLocaleString()} ريال</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #f59e0b20; color: #f59e0b;">📊</div>
+                            <div class="stat-info">
+                                <h3>مبيعات اليوم</h3>
+                                <div class="value">${(stats.today_sales || 0).toLocaleString()} ريال</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #8b5cf620; color: #8b5cf6;">🏦</div>
+                            <div class="stat-info">
+                                <h3>الرصيد البنكي</h3>
+                                <div class="value">${(stats.bank_balance || 0).toLocaleString()} ريال</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #ec489920; color: #ec4899;">👥</div>
+                            <div class="stat-info">
+                                <h3>العملاء</h3>
+                                <div class="value">${stats.total_customers || 0}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #14b8a620; color: #14b8a6;">🏭</div>
+                            <div class="stat-info">
+                                <h3>الموردين</h3>
+                                <div class="value">${stats.total_vendors || 0}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #f9731620; color: #f97316;">📦</div>
+                            <div class="stat-info">
+                                <h3>المنتجات</h3>
+                                <div class="value">${stats.total_products || 0}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #6366f120; color: #6366f1;">👔</div>
+                            <div class="stat-info">
+                                <h3>الموظفين</h3>
+                                <div class="value">${stats.total_employees || 0}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${stats.low_stock && stats.low_stock.length > 0 ? `
+                        <div class="alert alert-warning">
+                            <strong>⚠️ تنبيه: </strong>
+                            هناك ${stats.low_stock.length} منتجات تحت حد الطلب الأدنى
+                        </div>
+                    ` : ''}
+                    
+                    ${stats.recent_invoices && stats.recent_invoices.length > 0 ? `
+                        <div class="card">
+                            <h3 class="card-title">آخر الفواتير</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>الرقم</th>
+                                        <th>العميل</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجمالي</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${stats.recent_invoices.map(inv => `
+                                        <tr>
+                                            <td>${inv.invoice_number}</td>
+                                            <td>${inv.customer_name || '-'}</td>
+                                            <td>${inv.invoice_date}</td>
+                                            <td><strong>${inv.total.toLocaleString()} ريال</strong></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    ` : ''}
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <h3>فشل تحميل البيانات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadDashboard()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== ACCOUNTS ====================
+        async function loadAccounts() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل الحسابات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/accounts');
+                const accounts = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">📒 شجرة الحسابات</h2>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>اسم الحساب</th>
+                                    <th>النوع</th>
+                                    <th>الرصيد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${accounts.map(acc => `
+                                    <tr>
+                                        <td>${acc.code}</td>
+                                        <td>${acc.name_ar || acc.name}</td>
+                                        <td><span class="badge">${acc.type}</span></td>
+                                        <td>${(acc.current_balance || acc.balance || 0).toLocaleString()} ريال</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📒</div>
+                        <h3>فشل تحميل الحسابات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadAccounts()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== CUSTOMERS ====================
+        async function loadCustomers() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل العملاء...</p></div>';
+            
+            try {
+                const data = await api('GET', '/customers');
+                const customers = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">👥 العملاء</h2>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-primary" onclick="showAddCustomer()">+ إضافة عميل</button>
+                    </div>
+                    
+                    <div id="customerForm" style="display: none;" class="form-card">
+                        <h3 class="card-title">إضافة عميل جديد</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>اسم العميل</label>
+                                <input type="text" id="customerName" placeholder="اسم العميل">
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الجوال</label>
+                                <input type="text" id="customerPhone" placeholder="05xxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>البريد الإلكتروني</label>
+                                <input type="email" id="customerEmail" placeholder="email@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>الرقم الضريبي</label>
+                                <input type="text" id="customerTax" placeholder="الرقم الضريبي">
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="addCustomer()">حفظ</button>
+                            <button class="btn btn-danger" onclick="document.getElementById('customerForm').style.display='none'">إلغاء</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>الاسم</th>
+                                    <th>الجوال</th>
+                                    <th>الرصيد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${customers.length > 0 ? customers.map(c => `
+                                    <tr>
+                                        <td>${c.code}</td>
+                                        <td>${c.name}</td>
+                                        <td>${c.phone || '-'}</td>
+                                        <td>${(c.balance || 0).toLocaleString()} ريال</td>
+                                    </tr>
+                                `).join('') : `
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #9ca3af; padding: 40px;">
+                                            لا يوجد عملاء حالياً
+                                        </td>
+                                    </tr>
+                                `}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">👥</div>
+                        <h3>فشل تحميل العملاء</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadCustomers()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function showAddCustomer() {
+            document.getElementById('customerForm').style.display = 'block';
+        }
+        
+        async function addCustomer() {
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const email = document.getElementById('customerEmail').value;
+            const tax_number = document.getElementById('customerTax').value;
+            
+            if (!name) {
+                showToast('يرجى إدخال اسم العميل', 'warning');
+                return;
+            }
+            
+            try {
+                await api('POST', '/customers', { name, phone, email, tax_number });
+                showToast('تم إضافة العميل بنجاح', 'success');
+                document.getElementById('customerForm').style.display = 'none';
+                loadCustomers();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+        
+        // ==================== VENDORS ====================
+        async function loadVendors() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل الموردين...</p></div>';
+            
+            try {
+                const data = await api('GET', '/vendors');
+                const vendors = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">🏭 الموردين</h2>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-primary" onclick="showAddVendor()">+ إضافة مورد</button>
+                    </div>
+                    
+                    <div id="vendorForm" style="display: none;" class="form-card">
+                        <h3 class="card-title">إضافة مورد جديد</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>اسم المورد</label>
+                                <input type="text" id="vendorName" placeholder="اسم المورد">
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الجوال</label>
+                                <input type="text" id="vendorPhone" placeholder="05xxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="addVendor()">حفظ</button>
+                            <button class="btn btn-danger" onclick="document.getElementById('vendorForm').style.display='none'">إلغاء</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>الاسم</th>
+                                    <th>الجوال</th>
+                                    <th>الرصيد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${vendors.length > 0 ? vendors.map(v => `
+                                    <tr>
+                                        <td>${v.code}</td>
+                                        <td>${v.name}</td>
+                                        <td>${v.phone || '-'}</td>
+                                        <td>${(v.balance || 0).toLocaleString()} ريال</td>
+                                    </tr>
+                                `).join('') : `
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #9ca3af; padding: 40px;">
+                                            لا يوجد موردين حالياً
+                                        </td>
+                                    </tr>
+                                `}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🏭</div>
+                        <h3>فشل تحميل الموردين</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadVendors()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function showAddVendor() {
+            document.getElementById('vendorForm').style.display = 'block';
+        }
+        
+        async function addVendor() {
+            const name = document.getElementById('vendorName').value;
+            const phone = document.getElementById('vendorPhone').value;
+            
+            if (!name) {
+                showToast('يرجى إدخال اسم المورد', 'warning');
+                return;
+            }
+            
+            try {
+                await api('POST', '/vendors', { name, phone });
+                showToast('تم إضافة المورد بنجاح', 'success');
+                document.getElementById('vendorForm').style.display = 'none';
+                loadVendors();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+        
+        // ==================== PRODUCTS ====================
+        async function loadProducts() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل المنتجات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/products');
+                const products = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">📦 المنتجات</h2>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-primary" onclick="showAddProduct()">+ إضافة منتج</button>
+                    </div>
+                    
+                    <div id="productForm" style="display: none;" class="form-card">
+                        <h3 class="card-title">إضافة منتج جديد</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>اسم المنتج</label>
+                                <input type="text" id="productName" placeholder="اسم المنتج">
+                            </div>
+                            <div class="form-group">
+                                <label>الباركود</label>
+                                <input type="text" id="productBarcode" placeholder="الباركود">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>سعر الشراء</label>
+                                <input type="number" id="productCost" placeholder="سعر الشراء">
+                            </div>
+                            <div class="form-group">
+                                <label>سعر البيع</label>
+                                <input type="number" id="productPrice" placeholder="سعر البيع">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>الكمية</label>
+                                <input type="number" id="productStock" placeholder="الكمية" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>الحد الأدنى</label>
+                                <input type="number" id="productMin" placeholder="الحد الأدنى" value="0">
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="addProduct()">حفظ</button>
+                            <button class="btn btn-danger" onclick="document.getElementById('productForm').style.display='none'">إلغاء</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>الاسم</th>
+                                    <th>سعر البيع</th>
+                                    <th>الكمية</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${products.length > 0 ? products.map(p => `
+                                    <tr>
+                                        <td>${p.code}</td>
+                                        <td>${p.name}</td>
+                                        <td>${(p.sell_price || p.price || 0).toLocaleString()} ريال</td>
+                                        <td>${p.stock || p.quantity || 0}</td>
+                                    </tr>
+                                `).join('') : `
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #9ca3af; padding: 40px;">
+                                            لا يوجد منتجات حالياً
+                                        </td>
+                                    </tr>
+                                `}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📦</div>
+                        <h3>فشل تحميل المنتجات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadProducts()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function showAddProduct() {
+            document.getElementById('productForm').style.display = 'block';
+        }
+        
+        async function addProduct() {
+            const name = document.getElementById('productName').value;
+            const barcode = document.getElementById('productBarcode').value;
+            const cost_price = parseFloat(document.getElementById('productCost').value) || 0;
+            const sell_price = parseFloat(document.getElementById('productPrice').value) || 0;
+            const stock = parseFloat(document.getElementById('productStock').value) || 0;
+            const min_stock = parseFloat(document.getElementById('productMin').value) || 0;
+            
+            if (!name) {
+                showToast('يرجى إدخال اسم المنتج', 'warning');
+                return;
+            }
+            
+            try {
+                await api('POST', '/products', { name, barcode, cost_price, sell_price, stock, min_stock });
+                showToast('تم إضافة المنتج بنجاح', 'success');
+                document.getElementById('productForm').style.display = 'none';
+                loadProducts();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+        
+        // ==================== SALES ====================
+        async function loadSales() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل المبيعات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/sales');
+                const invoices = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">💰 المبيعات</h2>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الرقم</th>
+                                    <th>العميل</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجمالي</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${invoices.length > 0 ? invoices.map(inv => `
+                                    <tr>
+                                        <td>${inv.invoice_number}</td>
+                                        <td>${inv.customer_name || '-'}</td>
+                                        <td>${inv.invoice_date}</td>
+                                        <td><strong>${inv.total.toLocaleString()} ريال</strong></td>
+                                        <td><span class="badge badge-${inv.status}">${inv.status}</span></td>
+                                    </tr>
+                                `).join('') : `
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">
+                                            لا يوجد فواتير مبيعات حالياً
+                                        </td>
+                                    </tr>
+                                `}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">💰</div>
+                        <h3>فشل تحميل المبيعات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadSales()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== PURCHASES ====================
+        async function loadPurchases() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل المشتريات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/purchases');
+                const invoices = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">📥 المشتريات</h2>
+                    
+                    <div class="card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الرقم</th>
+                                    <th>المورد</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجمالي</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${invoices.length > 0 ? invoices.map(inv => `
+                                    <tr>
+                                        <td>${inv.invoice_number}</td>
+                                        <td>${inv.vendor_name || '-'}</td>
+                                        <td>${inv.invoice_date}</td>
+                                        <td><strong>${inv.total.toLocaleString()} ريال</strong></td>
+                                        <td><span class="badge badge-${inv.status}">${inv.status}</span></td>
+                                    </tr>
+                                `).join('') : `
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">
+                                            لا يوجد فواتير مشتريات حالياً
+                                        </td>
+                                    </tr>
+                                `}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📥</div>
+                        <h3>فشل تحميل المشتريات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadPurchases()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== SETTINGS ====================
+        async function loadSettings() {
+            const content = document.getElementById('pageContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل الإعدادات...</p></div>';
+            
+            try {
+                const data = await api('GET', '/settings');
+                const settings = data.data || data;
+                
+                content.innerHTML = `
+                    <h2 class="page-title">⚙️ الإعدادات</h2>
+                    
+                    <div class="form-card">
+                        <h3 class="card-title">إعدادات الشركة</h3>
+                        ${settings.map(s => `
+                            <div class="form-group">
+                                <label>${s.key}</label>
+                                <input type="text" value="${s.value || ''}" onchange="updateSetting('${s.key}', this.value)">
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚙️</div>
+                        <h3>فشل تحميل الإعدادات</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadSettings()">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+        
+        async function updateSetting(key, value) {
+            try {
+                await api('PUT', '/settings/' + key, { value });
+                showToast('تم تحديث الإعداد', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-SA', options);
+            
+            // Check if user is logged in
+            if (token) {
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    try {
+                        currentUser = JSON.parse(savedUser);
+                        document.getElementById('loginContainer').style.display = 'none';
+                        document.getElementById('appContainer').style.display = 'flex';
+                        updateUserInfo();
+                        loadDashboard();
+                    } catch {
+                        localStorage.clear();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

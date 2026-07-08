@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام خالد للمحاسبة</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb">
+  <div class="sb-logo">
+    <h2><i class="fas fa-chart-line"></i> خالد ERP</h2>
+    <small>نظام المحاسبة الذكي v5.0</small>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding-top:4px">
+    <div class="sb-sec"><div class="sb-title">الرئيسية</div>
+      <button class="nb on" onclick="nav('dash',this)"><i class="fas fa-th-large"></i><span>لوحة التحكم</span></button>
+      <button class="nb" onclick="nav('audit',this)"><i class="fas fa-history"></i><span>سجل المراجعة</span></button>
+    </div>
+    <div class="sb-sec"><div class="sb-title">المبيعات</div>
+      <button class="nb" onclick="nav('pos',this)"><i class="fas fa-cash-register"></i><span>نقطة البيع</span></button>
+      <button class="nb" onclick="nav('quotes',this)"><i class="fas fa-file-alt"></i><span>عروض الأسعار</span></button>
+      <button class="nb" onclick="nav('invs',this)"><i class="fas fa-file-invoice"></i><span>الفواتير</span></button>
+      <button class="nb" onclick="nav('custs',this)"><i class="fas fa-users"></i><span>العملاء</span></button>
+      <button class="nb" onclick="nav('ret-sales',this)"><i class="fas fa-undo"></i><span>مرتجعات المبيعات</span></button>
+    </div>
+    <div class="sb-sec"><div class="sb-title">المشتريات</div>
+      <button class="nb" onclick="nav('purs',this)"><i class="fas fa-cart-plus"></i><span>المشتريات</span></button>
+      <button class="nb" onclick="nav('sups',this)"><i class="fas fa-truck"></i><span>الموردون</span></button>
+      <button class="nb" onclick="nav('ret-purs',this)"><i class="fas fa-undo-alt"></i><span>مرتجعات المشتريات</span></button>
+    </div>
+    <div class="sb-sec"><div class="sb-title">المحاسبة</div>
+      <button class="nb" onclick="nav('jv',this)"><i class="fas fa-book"></i><span>القيود اليومية</span></button>
+      <button class="nb" onclick="nav('coa',this)"><i class="fas fa-sitemap"></i><span>شجرة الحسابات</span></button>
+      <button class="nb" onclick="nav('ledger',this)"><i class="fas fa-book-open"></i><span>دفتر الأستاذ</span></button>
+      <button class="nb" onclick="nav('trial',this)"><i class="fas fa-balance-scale"></i><span>ميزان المراجعة</span></button>
+      <button class="nb" onclick="nav('vouchers',this)"><i class="fas fa-money-check-alt"></i><span>سندات القبض والصرف</span></button>
+      <button class="nb" onclick="nav('cheques',this)"><i class="fas fa-money-check"></i><span>إدارة الشيكات</span></button>
+      <button class="nb" onclick="nav('cost-center',this)"><i class="fas fa-project-diagram"></i><span>مراكز التكلفة</span></button>
+    </div>
+    <div class="sb-sec"><div class="sb-title">المخزون والأصول</div>
+      <button class="nb" onclick="nav('stock',this)"><i class="fas fa-boxes"></i><span>المخزون</span></button>
+      <button class="nb" onclick="nav('assets',this)"><i class="fas fa-building"></i><span>الأصول الثابتة</span></button>
+      <button class="nb" onclick="nav('exps',this)"><i class="fas fa-money-bill-wave"></i><span>المصروفات</span></button>
+    </div>
+    <div class="sb-sec"><div class="sb-title">التقارير</div>
+      <button class="nb" onclick="nav('reps',this)"><i class="fas fa-chart-bar"></i><span>التقارير المالية</span></button>
+      <button class="nb" onclick="nav('balance',this)"><i class="fas fa-file-invoice-dollar"></i><span>الميزانية العمومية</span></button>
+      <button class="nb" onclick="nav('cashflow',this)"><i class="fas fa-money-bill-trend-up"></i><span>التدفقات النقدية</span></button>
+      <button class="nb" onclick="nav('budget',this)"><i class="fas fa-piggy-bank"></i><span>الموازنة التقديرية</span></button>
+      <button class="nb" onclick="nav('aging',this)"><i class="fas fa-clock"></i><span>أعمار الديون</span></button>
+      <button class="nb" onclick="nav('banks',this)"><i class="fas fa-university"></i><span>الحسابات البنكية</span></button>
+      <button class="nb" onclick="nav('zatca',this)"><i class="fas fa-shield-alt"></i><span>ZATCA</span></button>
+      <button class="nb" onclick="nav('cfg',this)"><i class="fas fa-cog"></i><span>الإعدادات</span></button>
+    </div>
+  </div>
+  <div style="padding:8px 16px;display:flex;gap:6px;align-items:center;border-top:1px solid rgba(255,255,255,.06)">
+    <button class="btn btn-sm" onclick="toggleTheme()" style="background:rgba(255,255,255,.1);color:#94a3b8;font-size:.7rem" title="تبديل الوضع"><i class="fas fa-moon"></i></button>
+    <span style="font-size:.6rem;color:#475569;flex:1">v5.0 &copy; 2026 خالد</span>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <strong id="pg-title" style="font-size:.95rem">لوحة التحكم</strong>
+      <span style="color:var(--tx3);font-size:.72rem" id="today-lbl"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="bge bg-ok"><i class="fas fa-circle" style="font-size:.4rem"></i> ZATCA</span>
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="بحث... (Ctrl+K)" id="global-search" oninput="globalSearch(this.value)"></div>
+      <button class="btn bo btn-sm" onclick="exportBackup()"><i class="fas fa-download"></i> تصدير</button>
+      <button class="btn bo btn-sm" onclick="document.getElementById('import-file').click()"><i class="fas fa-upload"></i> استيراد</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(event)">
+      <span style="font-size:.78rem;color:var(--tx2)"><i class="fas fa-user-shield"></i> مدير النظام</span>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+
+    <!-- DASHBOARD -->
+    <div id="p-dash" class="pg on">
+      <div class="sg">
+        <div class="sc g"><div class="sc-icon green"><i class="fas fa-shopping-cart"></i></div><div class="sc-lbl">مبيعات اليوم</div><div class="sc-val" id="d1">0 ر.س</div><div class="sc-sub" id="d2">0 فاتورة</div></div>
+        <div class="sc b"><div class="sc-icon blue"><i class="fas fa-percentage"></i></div><div class="sc-lbl">ضريبة القيمة المضافة</div><div class="sc-val" id="d3">0 ر.س</div><div class="sc-sub">VAT 15%</div></div>
+        <div class="sc o"><div class="sc-icon orange"><i class="fas fa-boxes-stacked"></i></div><div class="sc-lbl">أصناف المخزون</div><div class="sc-val" id="d4">0</div><div class="sc-sub" id="d5">0 منخفض</div></div>
+        <div class="sc r"><div class="sc-icon red"><i class="fas fa-chart-line"></i></div><div class="sc-lbl">صافي ربح الشهر</div><div class="sc-val" id="d6">0 ر.س</div><div class="sc-sub" id="d7">هامش 0%</div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ch"><i class="fas fa-file-invoice" style="color:var(--ac);margin-left:6px"></i> آخر الفواتير</div><table><tr><th>الرقم</th><th>العميل</th><th>المبلغ</th><th>الحالة</th></tr><tbody id="db-inv"></tbody></table></div>
+        <div class="card"><div class="ch"><i class="fas fa-exclamation-triangle" style="color:var(--wa);margin-left:6px"></i> تنبيهات المخزون</div><table><tr><th>الصنف</th><th>الكمية</th><th>الحد</th></tr><tbody id="db-stk"></tbody></table></div>
+      </div>
+      <div class="card"><div class="ch"><i class="fas fa-chart-area" style="color:var(--ok);margin-left:6px"></i> مبيعات الأشهر</div><div class="chart-container"><canvas id="chart-monthly"></canvas></div></div>
+    </div>
+
+    <!-- POS -->
+    <div id="p-pos" class="pg" style="padding:0;margin:-20px">
+      <div class="pos-wrap">
+        <div class="pos-left"><div class="ps"><input type="text" id="pos-q" placeholder="&#128269; بحث عن صنف أو باركود..." oninput="filterProds()"><select id="pos-cust"></select></div><div class="pgrid" id="pgrid"></div></div>
+        <div class="pos-right">
+          <div class="cart-hd"><div style="font-weight:700;font-size:.87rem;margin-bottom:7px"><i class="fas fa-receipt" style="color:var(--ac)"></i> الفاتورة الحالية</div><select id="pos-pay" style="width:100%;padding:8px;border:1.5px solid var(--bd);border-radius:8px;font-size:.78rem;outline:none;background:var(--wh);color:var(--tx)"><option>نقدي</option><option>بطاقة مدى</option><option>تحويل بنكي</option><option>آجل</option></select></div>
+          <div class="cart-items" id="cart"></div>
+          <div class="cart-ft">
+            <div class="tr"><span>المجموع الفرعي:</span><span id="c-sub">0.00 ر.س</span></div>
+            <div class="tr"><span>الخصم: <input type="number" id="c-disc" value="0" min="0" oninput="recalc()" style="width:55px;padding:4px;border:1px solid var(--bd);border-radius:6px;font-size:.78rem;text-align:center;background:var(--wh);color:var(--tx)"> ر.س</span></div>
+            <div class="tr"><span>ضريبة VAT (15%):</span><span id="c-tax">0.00 ر.س</span></div>
+            <div class="tr tr-big"><span>الإجمالي:</span><span id="c-tot">0.00 ر.س</span></div>
+            <div style="display:flex;gap:7px;margin-top:10px"><button class="btn bd2 btn-sm" onclick="clearCart()"><i class="fas fa-trash"></i></button><button class="btn bs" style="flex:1" onclick="completeSale()"><i class="fas fa-check-circle"></i> إتمام البيع (F12)</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTATIONS -->
+    <div id="p-quotes" class="pg"><div class="card"><div class="ch"><i class="fas fa-file-alt" style="color:var(--ac);margin-left:6px"></i> عروض الأسعار <button class="btn bp btn-sm" onclick="openQuoteModal()"><i class="fas fa-plus"></i> عرض سعر جديد</button></div>
+      <table><tr><th>الرقم</th><th>التاريخ</th><th>العميل</th><th>الإجمالي</th><th>الحالة</th><th>صالح حتى</th><th></th></tr><tbody id="t-quotes"></tbody></table></div></div>
+
+    <!-- INVOICES -->
+    <div id="p-invs" class="pg"><div class="card"><div class="ch"><i class="fas fa-file-invoice" style="color:var(--ac);margin-left:6px"></i> الفواتير الضريبية</div>
+      <table><tr><th>الرقم</th><th>التاريخ</th><th>العميل</th><th>المبلغ</th><th>الضريبة</th><th>الإجمالي</th><th>الدفع</th><th>الحالة</th><th></th></tr><tbody id="t-invs"></tbody></table></div></div>
+
+    <!-- CUSTOMERS -->
+    <div id="p-custs" class="pg"><div class="card"><div class="ch"><i class="fas fa-users" style="color:var(--ac);margin-left:6px"></i> العملاء <button class="btn bp btn-sm" onclick="openCustModal()"><i class="fas fa-user-plus"></i> عميل جديد</button></div>
+      <table><tr><th>الاسم</th><th>الجوال</th><th>الرقم الضريبي</th><th>حد الائتمان</th><th>الرصيد</th><th>الحالة</th><th></th></tr><tbody id="t-custs"></tbody></table></div></div>
+
+    <!-- SALES RETURNS -->
+    <div id="p-ret-sales" class="pg"><div class="card"><div class="ch"><i class="fas fa-undo" style="color:var(--ng);margin-left:6px"></i> مرتجعات المبيعات <button class="btn bp btn-sm" onclick="openSalesReturnModal()"><i class="fas fa-undo"></i> مرتجع جديد</button></div>
+      <table><tr><th>الرقم</th><th>التاريخ</th><th>العميل</th><th>فاتورة الأصل</th><th>المبلغ</th><th>السبب</th><th></th></tr><tbody id="t-ret-sales"></tbody></table></div></div>
+
+    <!-- PURCHASES -->
+    <div id="p-purs" class="pg"><div class="card"><div class="ch"><i class="fas fa-cart-plus" style="color:var(--ac);margin-left:6px"></i> المشتريات <button class="btn bp btn-sm" onclick="openPurModal()"><i class="fas fa-plus"></i> فاتورة شراء</button></div>
+      <table><tr><th>الرقم</th><th>المورد</th><th>التاريخ</th><th>المبلغ</th><th>الضريبة</th><th>الإجمالي</th></tr><tbody id="t-purs"></tbody></table></div></div>
+
+    <!-- SUPPLIERS -->
+    <div id="p-sups" class="pg"><div class="card"><div class="ch"><i class="fas fa-truck" style="color:var(--wa);margin-left:6px"></i> الموردون <button class="btn bp btn-sm" onclick="openSupModal()"><i class="fas fa-truck"></i> مورد جديد</button></div>
+      <table><tr><th>الاسم</th><th>الجوال</th><th>الرقم الضريبي</th><th>الرصيد المستحق</th><th></th></tr><tbody id="t-sups"></tbody></table></div></div>
+
+    <!-- PURCHASE RETURNS -->
+    <div id="p-ret-purs" class="pg"><div class="card"><div class="ch"><i class="fas fa-undo-alt" style="color:var(--ng);margin-left:6px"></i> مرتجعات المشتريات <button class="btn bp btn-sm" onclick="openPurchaseReturnModal()"><i class="fas fa-undo-alt"></i> مرتجع جديد</button></div>
+      <table><tr><th>الرقم</th><th>التاريخ</th><th>المورد</th><th>فاتورة الأصل</th><th>المبلغ</th><th>السبب</th><th></th></tr><tbody id="t-ret-purs"></tbody></table></div></div>
+
+    <!-- JOURNAL -->
+    <div id="p-jv" class="pg"><div class="card"><div class="ch"><i class="fas fa-book" style="color:var(--ac);margin-left:6px"></i> القيود اليومية <button class="btn bp btn-sm" onclick="openJVModal()"><i class="fas fa-plus"></i> قيد جديد</button></div>
+      <table><tr><th>رقم القيد</th><th>التاريخ</th><th>البيان</th><th>مدين</th><th>دائن</th><th>الحالة</th><th></th></tr><tbody id="t-jv"></tbody></table></div></div>
+
+    <!-- COA -->
+    <div id="p-coa" class="pg"><div class="card"><div class="ch"><i class="fas fa-sitemap" style="color:var(--ac);margin-left:6px"></i> شجرة الحسابات</div>
+      <table><tr><th>الكود</th><th>الحساب</th><th>النوع</th><th>المستوى</th><th>الرصيد</th></tr><tbody id="t-coa"></tbody></table></div></div>
+
+    <!-- LEDGER -->
+    <div id="p-ledger" class="pg"><div class="card"><div class="ch"><i class="fas fa-book-open" style="color:var(--ac);margin-left:6px"></i> دفتر الأستاذ</div>
+      <div class="cb"><div class="fr c4"><div class="fg"><label>الحساب</label><select id="gl-acc" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>من تاريخ</label><input id="gl-from" type="date"></div><div class="fg"><label>إلى تاريخ</label><input id="gl-to" type="date"></div><div class="fg"><label>&nbsp;</label><button class="btn bp" onclick="showAccountLedger()"><i class="fas fa-search"></i> عرض</button></div></div><div style="margin-top:8px;font-weight:700;color:var(--ac);font-size:.95rem" id="gl-total"></div></div>
+      <table><tr><th>التاريخ</th><th>رقم القيد</th><th>البيان</th><th>مدين</th><th>دائن</th><th>الرصيد</th></tr><tbody id="t-ledger"></tbody></table></div></div>
+
+    <!-- TRIAL BALANCE -->
+    <div id="p-trial" class="pg"><div class="card"><div class="ch"><i class="fas fa-balance-scale" style="color:var(--ac);margin-left:6px"></i> ميزان المراجعة <button class="btn bo btn-sm" onclick="window.print()"><i class="fas fa-print"></i> طباعة</button></div>
+      <table><tr><th>الكود</th><th>الحساب</th><th>النوع</th><th>مدين</th><th>دائن</th></tr><tbody id="t-trial"></tbody>
+      <tfoot><tr style="background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700"><td colspan="3" style="padding:12px 13px">الإجمالي</td><td style="padding:12px 13px" id="trial-dr">0.00</td><td style="padding:12px 13px" id="trial-cr">0.00</td></tr></tfoot></table></div></div>
+
+    <!-- VOUCHERS -->
+    <div id="p-vouchers" class="pg"><div class="card"><div class="ch"><i class="fas fa-money-check-alt" style="color:var(--ac);margin-left:6px"></i> سندات القبض والصرف<div style="display:flex;gap:6px"><button class="btn bs btn-sm" onclick="openReceiptModal()"><i class="fas fa-arrow-down"></i> سند قبض</button><button class="btn bd2 btn-sm" onclick="openPaymentModal()"><i class="fas fa-arrow-up"></i> سند صرف</button></div></div>
+      <table><tr><th>الرقم</th><th>التاريخ</th><th>النوع</th><th>الطرف</th><th>المبلغ</th><th>الدفع</th><th>المرجع</th><th></th></tr><tbody id="t-vouchers"></tbody></table></div></div>
+
+    <!-- CHEQUES -->
+    <div id="p-cheques" class="pg"><div class="card"><div class="ch"><i class="fas fa-money-check" style="color:var(--wa);margin-left:6px"></i> إدارة الشيكات<div style="display:flex;gap:6px"><button class="btn bs btn-sm" onclick="openChequeModal('received')"><i class="fas fa-plus"></i> شيك مقبوض</button><button class="btn bd2 btn-sm" onclick="openChequeModal('issued')"><i class="fas fa-plus"></i> شيك مصروف</button></div></div>
+      <table><tr><th>رقم الشيك</th><th>الاستحقاق</th><th>البنك</th><th>الطرف</th><th>المبلغ</th><th>النوع</th><th>الحالة</th><th></th></tr><tbody id="t-cheques"></tbody></table></div></div>
+
+    <!-- COST CENTERS -->
+    <div id="p-cost-center" class="pg"><div class="card"><div class="ch"><i class="fas fa-project-diagram" style="color:var(--pr);margin-left:6px"></i> مراكز التكلفة <button class="btn bp btn-sm" onclick="openCCModal()"><i class="fas fa-plus"></i> مركز جديد</button></div>
+      <table><tr><th>الكود</th><th>الاسم</th><th>الوصف</th><th>القيود</th><th>المدين</th><th>الدائن</th><th></th></tr><tbody id="t-cc"></tbody></table></div></div>
+
+    <!-- INVENTORY -->
+    <div id="p-stock" class="pg"><div class="card"><div class="ch"><i class="fas fa-boxes" style="color:var(--ac);margin-left:6px"></i> المخزون<div style="display:flex;gap:6px"><button class="btn bw btn-sm" onclick="openAdjModal()"><i class="fas fa-clipboard-check"></i> تسوية</button><button class="btn bp btn-sm" onclick="openProdModal()"><i class="fas fa-plus"></i> صنف جديد</button></div></div>
+      <table><tr><th>الكود</th><th>الاسم</th><th>الفئة</th><th>الكمية</th><th>سعر الشراء</th><th>سعر البيع</th><th>القيمة</th><th>الحد الأدنى</th><th>الحالة</th><th></th></tr><tbody id="t-stock"></tbody></table></div></div>
+
+    <!-- ASSETS -->
+    <div id="p-assets" class="pg"><div class="card"><div class="ch"><i class="fas fa-building" style="color:var(--ac);margin-left:6px"></i> الأصول الثابتة <button class="btn bp btn-sm" onclick="openAssetModal()"><i class="fas fa-plus"></i> أصل جديد</button></div>
+      <table><tr><th>الأصل</th><th>التاريخ</th><th>القيمة الأصلية</th><th>الإهلاك %</th><th>مجمع الإهلاك</th><th>صافي القيمة</th><th></th></tr><tbody id="t-assets"></tbody></table></div></div>
+
+    <!-- EXPENSES -->
+    <div id="p-exps" class="pg"><div class="card"><div class="ch"><i class="fas fa-money-bill-wave" style="color:var(--ng);margin-left:6px"></i> المصروفات <button class="btn bp btn-sm" onclick="openExpModal()"><i class="fas fa-plus"></i> مصروف جديد</button></div>
+      <table><tr><th>التاريخ</th><th>الفئة</th><th>البيان</th><th>المبلغ</th><th>مركز التكلفة</th><th>الدفع</th><th></th></tr><tbody id="t-exps"></tbody></table></div></div>
+
+    <!-- REPORTS -->
+    <div id="p-reps" class="pg">
+      <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px"><label style="font-size:.82rem;font-weight:600">الفترة:</label><select id="rep-period" onchange="loadReps()" style="padding:8px 12px;border:1.5px solid var(--bd);border-radius:8px;outline:none;font-size:.82rem;background:var(--wh);color:var(--tx)"><option value="all">كل الفترات</option><option value="today">اليوم</option><option value="week">هذا الأسبوع</option><option value="month" selected>هذا الشهر</option><option value="quarter">هذا الربع</option><option value="year">هذه السنة</option></select></div>
+      <div class="g3">
+        <div class="card"><div class="ch"><i class="fas fa-chart-pie" style="color:var(--ok);margin-left:6px"></i> قائمة الدخل</div><div class="cb"><div class="tr"><span>إجمالي المبيعات:</span><span id="r-sales" style="font-weight:700">0.00</span></div><div class="tr"><span>COGS:</span><span id="r-cogs" style="color:var(--ng)">0.00</span></div><div class="tr" style="font-weight:700;border-top:2px solid var(--bd);padding-top:8px"><span>مجمل الربح:</span><span id="r-gross" style="color:var(--ok)">0.00</span></div><div class="tr"><span>المصروفات:</span><span id="r-exp" style="color:var(--ng)">0.00</span></div><div class="tr" style="font-weight:700;border-top:2px solid var(--bd);padding-top:8px"><span>صافي الربح:</span><span id="r-net" style="color:var(--ac);font-size:1.1rem">0.00</span></div></div></div>
+        <div class="card"><div class="ch"><i class="fas fa-percentage" style="color:var(--ac);margin-left:6px"></i> ضريبة VAT</div><div class="cb"><div class="tr"><span>ضريبة المخرجات:</span><span id="r-tax-out">0.00</span></div><div class="tr"><span>ضريبة المدخلات:</span><span id="r-tax-in">0.00</span></div><div class="tr" style="font-weight:700;border-top:2px solid var(--bd);padding-top:8px"><span>صافي الضريبة:</span><span id="r-tax-net" style="color:var(--ng)">0.00</span></div><div class="tr" style="margin-top:8px"><span>عدد الفواتير:</span><span id="r-inv-cnt">0</span></div></div></div>
+        <div class="card"><div class="ch"><i class="fas fa-chart-bar" style="color:var(--pr);margin-left:6px"></i> إحصائيات</div><div class="cb"><div class="tr"><span>العملاء:</span><span id="r-custs">0</span></div><div class="tr"><span>الموردون:</span><span id="r-sups">0</span></div><div class="tr"><span>المشتريات:</span><span id="r-purch">0.00</span></div><div class="tr"><span>الأصول:</span><span id="r-assets">0.00</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- BALANCE SHEET -->
+    <div id="p-balance" class="pg"><div style="margin-bottom:12px" id="bs-check"></div><div class="g2"><div><div class="card"><div class="ch"><i class="fas fa-arrow-up" style="color:var(--ok);margin-left:6px"></i> الأصول</div><div class="cb" id="bs-assets"></div></div></div><div><div class="card"><div class="ch"><i class="fas fa-arrow-down" style="color:var(--ng);margin-left:6px"></i> الخصوم</div><div class="cb" id="bs-liab"></div></div><div class="card"><div class="ch"><i class="fas fa-star" style="color:var(--wa);margin-left:6px"></i> حقوق الملكية</div><div class="cb" id="bs-equity"></div></div></div></div></div>
+
+    <!-- CASH FLOW -->
+    <div id="p-cashflow" class="pg"><div class="card"><div class="ch"><i class="fas fa-money-bill-trend-up" style="color:var(--ok);margin-left:6px"></i> قائمة التدفقات النقدية</div><div class="cb">
+      <div style="font-weight:700;color:var(--ac);font-size:.9rem;border-bottom:2px solid var(--bd);padding-bottom:8px;margin-bottom:8px"><i class="fas fa-cogs"></i> الأنشطة التشغيلية</div>
+      <div class="tr"><span>تحصيلات من العملاء:</span><span id="cf-cust-collect" style="color:var(--ok)">0.00</span></div>
+      <div class="tr"><span>مدفوعات للموردين:</span><span id="cf-sup-pay" style="color:var(--ng)">0.00</span></div>
+      <div class="tr"><span>مدفوعات مصروفات:</span><span id="cf-exp-pay" style="color:var(--ng)">0.00</span></div>
+      <div class="tr" style="font-weight:700;border-top:2px solid var(--bd);padding-top:8px"><span>صافي التدفق التشغيلي:</span><span id="cf-ops" style="color:var(--ac)">0.00</span></div>
+      <div style="font-weight:700;color:var(--ac);font-size:.9rem;border-bottom:2px solid var(--bd);padding-bottom:8px;margin:14px 0 8px"><i class="fas fa-building"></i> الأنشطة الاستثمارية</div>
+      <div class="tr"><span>شراء أصول ثابتة:</span><span id="cf-asset-buy" style="color:var(--ng)">0.00</span></div>
+      <div class="tr" style="font-weight:800;font-size:1.05rem;border-top:3px double var(--tx);padding-top:12px;margin-top:12px"><span>صافي التغير في النقد:</span><span id="cf-total" style="color:var(--ac)">0.00 ر.س</span></div>
+    </div></div></div>
+
+    <!-- BUDGET -->
+    <div id="p-budget" class="pg"><div class="card"><div class="ch"><i class="fas fa-piggy-bank" style="color:var(--pr);margin-left:6px"></i> الموازنة التقديرية <button class="btn bp btn-sm" onclick="openBudgetModal()"><i class="fas fa-edit"></i> تعديل</button></div>
+      <table><tr><th>البند</th><th>الموازنة</th><th>الفعلي</th><th>الفرق</th><th>نسبة الصرف</th><th>الحالة</th></tr><tbody id="t-budget"></tbody></table></div></div>
+
+    <!-- AGING -->
+    <div id="p-aging" class="pg">
+      <div class="card"><div class="ch"><i class="fas fa-users" style="color:var(--ac);margin-left:6px"></i> أعمار ديون العملاء (AR)</div><table><tr><th>العميل</th><th>الجوال</th><th>جاري</th><th>30 يوم</th><th>60 يوم</th><th>فوق 90 يوم</th><th>الإجمالي</th></tr><tbody id="t-ar-aging"></tbody><tfoot id="ar-aging-total"></tfoot></table></div>
+      <div class="card"><div class="ch"><i class="fas fa-truck" style="color:var(--wa);margin-left:6px"></i> أعمار ديون الموردين (AP)</div><table><tr><th>المورد</th><th>الجوال</th><th>جاري</th><th>30 يوم</th><th>60 يوم</th><th>فوق 90 يوم</th><th>الإجمالي</th></tr><tbody id="t-ap-aging"></tbody><tfoot id="ap-aging-total"></tfoot></table></div>
+    </div>
+
+    <!-- BANKS -->
+    <div id="p-banks" class="pg"><div class="card"><div class="ch"><i class="fas fa-university" style="color:var(--ac);margin-left:6px"></i> الحسابات البنكية <span style="font-weight:700;color:var(--ac)" id="banks-total">0.00 ر.س</span></div>
+      <table><tr><th>البنك</th><th>رقم الحساب</th><th>الكود</th><th>الرصيد</th></tr><tbody id="t-banks"></tbody></table></div></div>
+
+    <!-- ZATCA -->
+    <div id="p-zatca" class="pg">
+      <div class="z-hero"><h2 style="margin:0 0 6px"><i class="fas fa-shield-alt"></i> الفوترة الإلكترونية - المرحلة الثانية</h2><p style="opacity:.85;font-size:.87rem">ربط وتكامل مع هيئة الزكاة والضريبة والجمارك (ZATCA)</p><div class="z-grid"><div class="z-item"><i class="fas fa-certificate fa-lg"></i><div style="margin-top:5px;font-size:.73rem">شهادة CSID</div><strong>صالحة</strong></div><div class="z-item"><i class="fas fa-qrcode fa-lg"></i><div style="margin-top:5px;font-size:.73rem">QR Code</div><strong>تلقائي</strong></div><div class="z-item"><i class="fas fa-cloud-upload-alt fa-lg"></i><div style="margin-top:5px;font-size:.73rem">إرسال الفواتير</div><strong>لحظي</strong></div></div></div>
+      <div class="g2"><div class="card"><div class="ch">إحصائيات الفوترة</div><div class="cb"><div class="tr"><span>إجمالي الفواتير:</span><span id="z-cnt">0</span></div><div class="tr"><span>ضريبة القيمة المضافة:</span><span id="z-tax">0.00 ر.س</span></div></div></div><div class="card"><div class="ch">بيانات المنشأة</div><div class="cb" id="z-co"></div></div></div>
+    </div>
+
+    <!-- AUDIT TRAIL -->
+    <div id="p-audit" class="pg"><div class="card"><div class="ch"><i class="fas fa-history" style="color:var(--pr);margin-left:6px"></i> سجل المراجعة (Audit Trail)</div>
+      <table><tr><th>التاريخ والوقت</th><th>العملية</th><th>القسم</th><th>التفاصيل</th><th>المستخدم</th></tr><tbody id="t-audit"></tbody></table></div></div>
+
+    <!-- SETTINGS -->
+    <div id="p-cfg" class="pg"><div class="card" style="max-width:680px"><div class="ch"><i class="fas fa-cog" style="color:var(--ac);margin-left:6px"></i> الإعدادات</div>
+      <div class="cb"><div class="fr c2"><div class="fg"><label>اسم المنشأة</label><input id="s-name"></div><div class="fg"><label>الرقم الضريبي</label><input id="s-vat"></div><div class="fg"><label>السجل التجاري</label><input id="s-cr"></div><div class="fg"><label>رقم الجوال</label><input id="s-ph"></div></div><div class="fg"><label>العنوان</label><input id="s-addr"></div>
+      <div class="fr c3" style="margin-top:12px"><div class="fg"><label>بادئة المبيعات</label><input id="s-ip" value="INV"></div><div class="fg"><label>بادئة المشتريات</label><input id="s-pp" value="PUR"></div><div class="fg"><label>بادئة القيود</label><input id="s-jp" value="JV"></div></div>
+      <div class="fr c3" style="margin-top:8px"><div class="fg"><label>بادئة سندات القبض</label><input id="s-rp" value="RV"></div><div class="fg"><label>بادئة سندات الصرف</label><input id="s-pp2" value="PV"></div><div class="fg"><label>بادئة المرتجعات</label><input id="s-rtp" value="RET"></div></div>
+      <button class="btn bp" style="margin-top:14px" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+    </div></div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="m-prod"><div class="mb"><div class="mt"><i class="fas fa-box"></i> إضافة / تعديل صنف</div><input type="hidden" id="p-id"><div class="fr c2"><div class="fg"><label>اسم الصنف *</label><input id="p-name"></div><div class="fg"><label>الفئة</label><input id="p-cat"></div><div class="fg"><label>الوحدة</label><input id="p-unit" value="قطعة"></div><div class="fg"><label>الباركود</label><input id="p-bar"></div><div class="fg"><label>سعر الشراء</label><input id="p-cost" type="number" value="0" min="0" step="0.01"></div><div class="fg"><label>سعر البيع *</label><input id="p-price" type="number" value="0" min="0" step="0.01"></div><div class="fg"><label>الكمية</label><input id="p-qty" type="number" value="0" min="0"></div><div class="fg"><label>الحد الأدنى</label><input id="p-min" type="number" value="5" min="0"></div></div><div class="ma"><button class="btn bp" onclick="saveProd()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-prod')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-cust"><div class="mb"><div class="mt"><i class="fas fa-user-plus"></i> إضافة / تعديل عميل</div><input type="hidden" id="c-id"><div class="fr c2"><div class="fg"><label>اسم العميل *</label><input id="c-name"></div><div class="fg"><label>رقم الجوال</label><input id="c-ph"></div><div class="fg"><label>البريد</label><input id="c-em"></div><div class="fg"><label>الرقم الضريبي</label><input id="c-vat"></div><div class="fg"><label>العنوان</label><input id="c-addr"></div><div class="fg"><label>حد الائتمان</label><input id="c-lim" type="number" value="0"></div></div><div class="ma"><button class="btn bp" onclick="saveCust()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-cust')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-sup"><div class="mb"><div class="mt"><i class="fas fa-truck"></i> إضافة / تعديل مورد</div><input type="hidden" id="sp-id"><div class="fr c2"><div class="fg"><label>اسم المورد *</label><input id="sp-name"></div><div class="fg"><label>رقم الجوال</label><input id="sp-ph"></div><div class="fg"><label>الرقم الضريبي</label><input id="sp-vat"></div><div class="fg"><label>العنوان</label><input id="sp-addr"></div></div><div class="ma"><button class="btn bp" onclick="saveSup()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-sup')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-pur"><div class="mb w"><div class="mt"><i class="fas fa-cart-plus"></i> فاتورة مشتريات</div><div class="fr c3"><div class="fg"><label>المورد *</label><select id="pur-sup" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>التاريخ *</label><input id="pur-dt" type="date"></div><div class="fg"><label>ملاحظات</label><input id="pur-notes"></div></div><div id="pur-lines"></div><button class="btn bo btn-sm" onclick="addPurLine()"><i class="fas fa-plus"></i> صنف</button><div style="margin-top:11px;padding-top:11px;border-top:1px solid var(--bd);text-align:left;font-weight:700">الإجمالي: <span id="pur-tot" style="color:var(--ac)">0.00 ر.س</span></div><div class="ma"><button class="btn bp" onclick="savePur()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-pur')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-jv"><div class="mb xl"><div class="mt"><i class="fas fa-book"></i> قيد يومي جديد</div><div class="fr c3" style="margin-bottom:13px"><div class="fg"><label>التاريخ *</label><input id="jv-dt" type="date"></div><div class="fg"><label>البيان *</label><input id="jv-desc"></div><div class="fg"><label>مركز التكلفة</label><select id="jv-cc" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option value="">بدون</option></select></div></div><div id="jv-lines"></div><button class="btn bo btn-sm" style="margin-top:7px" onclick="addJvLine()"><i class="fas fa-plus"></i> سطر</button><div style="margin-top:10px;display:flex;gap:20px;font-size:.82rem;font-weight:700"><span>المدين: <span id="jv-dr" style="color:var(--ok)">0.00</span></span><span>الدائن: <span id="jv-cr" style="color:var(--ng)">0.00</span></span><span id="jv-bal"></span></div><div class="ma"><button class="btn bp" onclick="saveJV()"><i class="fas fa-save"></i> حفظ القيد</button><button class="btn bo" onclick="closeModal('m-jv')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-quote"><div class="mb w"><div class="mt"><i class="fas fa-file-alt"></i> عرض سعر</div><div class="fr c3"><div class="fg"><label>العميل *</label><select id="q-cust" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>التاريخ *</label><input id="q-dt" type="date"></div><div class="fg"><label>صالح حتى</label><input id="q-exp" type="date"></div></div><div class="fg"><label>ملاحظات</label><input id="q-notes"></div><div id="q-lines"></div><button class="btn bo btn-sm" onclick="addQuoteLine()"><i class="fas fa-plus"></i> صنف</button><div style="margin-top:11px;padding-top:11px;border-top:1px solid var(--bd);text-align:left;font-weight:700">الإجمالي: <span id="q-tot" style="color:var(--ac)">0.00 ر.س</span></div><div class="ma"><button class="btn bp" onclick="saveQuote()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-quote')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-cheque"><div class="mb"><div class="mt"><i class="fas fa-money-check"></i> <span id="cheque-title">شيك</span></div><input type="hidden" id="chq-type"><div class="fr c2"><div class="fg"><label>رقم الشيك *</label><input id="chq-num"></div><div class="fg"><label>البنك *</label><input id="chq-bank"></div><div class="fg"><label>تاريخ الاستحقاق *</label><input id="chq-due" type="date"></div><div class="fg"><label>المبلغ *</label><input id="chq-amt" type="number" min="0" step="0.01"></div><div class="fg"><label>الطرف</label><select id="chq-party" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>الحالة</label><select id="chq-status" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option>معلق</option><option>محصل</option><option>مرفوض</option></select></div></div><div class="fg"><label>ملاحظات</label><input id="chq-notes"></div><div class="ma"><button class="btn bp" onclick="saveCheque()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-cheque')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-cc"><div class="mb"><div class="mt"><i class="fas fa-project-diagram"></i> مركز تكلفة</div><div class="fr c2"><div class="fg"><label>الكود *</label><input id="cc-code"></div><div class="fg"><label>الاسم *</label><input id="cc-name"></div></div><div class="fg"><label>الوصف</label><input id="cc-desc"></div><div class="ma"><button class="btn bp" onclick="saveCC()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-cc')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-budget"><div class="mb w"><div class="mt"><i class="fas fa-piggy-bank"></i> تعديل الموازنة</div><div id="budget-fields"></div><div class="ma"><button class="btn bp" onclick="saveBudget()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-budget')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-receipt"><div class="mb"><div class="mt"><i class="fas fa-arrow-down" style="color:var(--ok)"></i> سند قبض</div><div class="fr c2"><div class="fg"><label>التاريخ *</label><input id="rv-dt" type="date"></div><div class="fg"><label>العميل *</label><select id="rv-cust" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>المبلغ *</label><input id="rv-amt" type="number" min="0" step="0.01"></div><div class="fg"><label>الدفع</label><select id="rv-pay" onchange="toggleBank('rv-pay','rv-bank-wrap')" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option>نقدي</option><option>تحويل بنكي</option><option>بطاقة مدى</option><option>شيك</option></select></div></div><div id="rv-bank-wrap" style="display:none"><div class="fg"><label>البنك</label><select id="rv-bank" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option value="1">البنك الأهلي</option><option value="2">بنك الراجحي</option></select></div></div><div class="fr c2"><div class="fg"><label>المرجع</label><input id="rv-ref"></div><div class="fg"><label>ملاحظات</label><input id="rv-notes"></div></div><div class="ma"><button class="btn bs" onclick="saveReceipt()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-receipt')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-payment"><div class="mb"><div class="mt"><i class="fas fa-arrow-up" style="color:var(--ng)"></i> سند صرف</div><div class="fr c2"><div class="fg"><label>التاريخ *</label><input id="pv-dt" type="date"></div><div class="fg"><label>المورد *</label><select id="pv-sup" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>المبلغ *</label><input id="pv-amt" type="number" min="0" step="0.01"></div><div class="fg"><label>الدفع</label><select id="pv-pay" onchange="toggleBank('pv-pay','pv-bank-wrap')" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option>نقدي</option><option>تحويل بنكي</option><option>بطاقة مدى</option><option>شيك</option></select></div></div><div id="pv-bank-wrap" style="display:none"><div class="fg"><label>البنك</label><select id="pv-bank" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option value="1">البنك الأهلي</option><option value="2">بنك الراجحي</option></select></div></div><div class="fr c2"><div class="fg"><label>المرجع</label><input id="pv-ref"></div><div class="fg"><label>ملاحظات</label><input id="pv-notes"></div></div><div class="ma"><button class="btn bd2" onclick="savePayment()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-payment')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-ret-sale"><div class="mb w"><div class="mt"><i class="fas fa-undo"></i> مرتجع مبيعات</div><div class="fr c3"><div class="fg"><label>التاريخ *</label><input id="sr-dt" type="date"></div><div class="fg"><label>العميل</label><select id="sr-cust" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>فاتورة الأصل</label><input id="sr-inv"></div></div><div class="fg"><label>السبب</label><input id="sr-reason"></div><div id="sr-lines"></div><button class="btn bo btn-sm" onclick="addSrLine()"><i class="fas fa-plus"></i> صنف</button><div style="margin-top:11px;padding-top:11px;border-top:1px solid var(--bd);text-align:left;font-weight:700">الإجمالي: <span id="sr-tot" style="color:var(--ac)">0.00 ر.س</span></div><div class="ma"><button class="btn bp" onclick="saveSalesReturn()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-ret-sale')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-ret-pur"><div class="mb w"><div class="mt"><i class="fas fa-undo-alt"></i> مرتجع مشتريات</div><div class="fr c3"><div class="fg"><label>التاريخ *</label><input id="pr-dt" type="date"></div><div class="fg"><label>المورد</label><select id="pr-sup" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"></select></div><div class="fg"><label>فاتورة الأصل</label><input id="pr-pur-num"></div></div><div class="fg"><label>السبب</label><input id="pr-reason"></div><div id="pr-lines"></div><button class="btn bo btn-sm" onclick="addPrLine()"><i class="fas fa-plus"></i> صنف</button><div style="margin-top:11px;padding-top:11px;border-top:1px solid var(--bd);text-align:left;font-weight:700">الإجمالي: <span id="pr-tot" style="color:var(--ac)">0.00 ر.س</span></div><div class="ma"><button class="btn bp" onclick="savePurchaseReturn()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-ret-pur')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-asset"><div class="mb"><div class="mt"><i class="fas fa-building"></i> أصل ثابت</div><div class="fr c2"><div class="fg"><label>اسم الأصل *</label><input id="a-name"></div><div class="fg"><label>التاريخ</label><input id="a-dt" type="date"></div><div class="fg"><label>القيمة *</label><input id="a-val" type="number" min="0" step="0.01"></div><div class="fg"><label>الإهلاك %</label><input id="a-dep" type="number" min="0" max="100" value="20"></div></div><div class="ma"><button class="btn bp" onclick="saveAsset()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-asset')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-exp"><div class="mb"><div class="mt"><i class="fas fa-money-bill-wave"></i> مصروف</div><div class="fr c2"><div class="fg"><label>التاريخ *</label><input id="ex-dt" type="date"></div><div class="fg"><label>الفئة *</label><select id="ex-cat" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option>إيجار</option><option>رواتب</option><option>كهرباء ومياه</option><option>صيانة</option><option>تسويق</option><option>اتصالات</option><option>تأمين</option><option>نقل وشحن</option><option>أخرى</option></select></div><div class="fg"><label>البيان</label><input id="ex-desc"></div><div class="fg"><label>المبلغ *</label><input id="ex-amt" type="number" min="0" step="0.01"></div><div class="fg"><label>الدفع</label><select id="ex-pay" style="padding:9px;border:1.5px solid var(--bd);border-radius:8px;width:100%;outline:none;background:var(--wh);color:var(--tx)"><option>نقدي</option><option>بطاقة مدى</option><option>تحويل بنكي</option></select></div></div><div class="ma"><button class="btn bp" onclick="saveExp()"><i class="fas fa-save"></i> حفظ</button><button class="btn bo" onclick="closeModal('m-exp')">إلغاء</button></div></div></div>
+
+<div class="modal" id="m-prt"><div class="mb"><div id="prt-content"></div><div style="display:flex;gap:9px;justify-content:center;margin-top:14px"><button class="btn bp" onclick="window.print()"><i class="fas fa-print"></i> طباعة</button><button class="btn bo" onclick="closeModal('m-prt')">إغلاق</button></div></div></div>
+<div class="modal" id="m-jv-view"><div class="mb w"><div class="mt"><i class="fas fa-list"></i> تفاصيل القيد</div><table><tr><th>الكود</th><th>الاسم</th><th>مدين</th><th>دائن</th></tr><tbody id="jv-view-lines"></tbody></table><div class="ma"><button class="btn bo" onclick="closeModal('m-jv-view')">إغلاق</button></div></div></div>
+<div class="modal" id="m-stmt-view"><div class="mb w"><div id="stmt-content"></div></div></div>
+<div class="modal" id="m-bank-stmt"><div class="mb w"><div id="bank-stmt-content"></div></div></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
